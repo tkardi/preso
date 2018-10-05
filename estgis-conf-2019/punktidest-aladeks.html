@@ -1,0 +1,413 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Punktidest aladeks ehk kuidas kasvatada kringlit rosinate ümber</title>
+
+		<link rel="stylesheet" href="static/reveal.js-3.5.0/css/reveal.css">
+		<link rel="stylesheet" href="static/reveal.js-3.5.0/css/theme/white.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="static/reveal.js-3.5.0/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'static/reveal.js-3.5.0/css/print/pdf.css' : 'static/reveal.js-3.5.0/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h2>Punktidest aladeks</h2>
+                    <small>ehk kuidas kasvatada kringlit rosinate ümber</small>
+                    <br><br><br><br>
+					<div align="right">
+						<small>
+                            @tkardi<br>
+                            Tõnis Kärdi<br>
+                            LonLat OÜ<br>
+                            <a href="mailto:tonis.kardi@gmail.com">tonis.kardi@gmail.com</a>
+                        </small>
+					</div>
+				</section>
+
+                <section>
+                    <section>
+                        Palun, siin on hunnik punkte, meil on vaja atribuutika alusel loodud alasid!<br>
+                        <small>(tegelikult nii ei olnud, aga no oletame)</small>
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-address.png">
+                    </section>
+                    <section>
+                        "Hah! see on ju lihtne!"
+                    </section>
+                    <section>
+                        Voronoid<br>
+                        <small>ja neid saab genereerida otse
+                            <a href="https://postgis.net/docs/ST_VoronoiPolygons.html"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                PostGISis</a>
+                        </small>
+                    </section>
+                    <section>
+                        <img src="static/img/address_voronoi.png">
+                    </section>
+                    <section>
+                        Grupeerime tükid atribuudi (või mitme) alusel ja ..
+                    </section>
+                    <section>
+                        <img src="static/img/address_voronoi_by_zip.png">
+                    </section>
+                    <section>
+                        <img src="https://i.giphy.com/media/6HOkD1pSCne4E/giphy.gif">
+                        <div align="right" style="font-size:8px">
+							via <a href="https://media.giphy.com/media/6HOkD1pSCne4E/giphy.gif"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                giphy</a>
+						</div>
+                    </section>
+                    <section>
+                        aaaaaaaga...<br>
+                        <small>nurga taga on <i>standby</i> režiimis ootel ventilaator</small>
+                    </section>
+                    <section>
+                        jõudlus?<br>
+                        <small>päris keeruline paralleliseerida arvutamist</small>
+                    </section>
+                    <section>
+                        andmete uuendused/muudatused?<br>
+                        <small>sisuliselt peab alati terve andmestiku uuesti arvutama</small>
+                    </section>
+                    <section>
+                        <small>ja tegelikult / peamiselt:</small><br>
+                        mida need alad üldse peaks näitama?
+                    </section>
+                    <section>
+                        antud juhul räägime sihtnumbrialadest
+                    </section>
+                    <section>
+                        <img src="static/img/address_voronoi_by_zip_detail.png">
+                    </section>
+                    <section>
+                        vt nt sihtnumbrite reeglistik<br>
+                        <small>
+                            <a href="https://www.omniva.ee/ari/kiri/sihtnumbrid_allalaadimiseks"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                Omniva
+                            </a> kodulehelt
+                            <a href="https://www.omniva.ee/public/bar/export/sihtnumbrid.csv"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                csv-failina
+                            </a> allalaetav
+                        </small>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        seega vaja natuke teistsugust lähenemist<br>
+                        <small>alustame hoopis teisest otsast</small>
+                    </section>
+                    <section>
+                        teejooned<br>
+                        <small>
+                            <a href="http://download.geofabrik.de/europe/estonia.html"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                OSM
+                            </a>,
+                            <a href="https://geoportaal.maaamet.ee/est/Andmete-tellimine/Avaandmed/Eesti-topograafia-andmekogu-ruumiandmed-p607.html"
+                                target="_blank" target="_blank" rel="noopener noreferrer">ETAK
+                            </a>
+                        </small>
+                    </section>
+                    <section>
+                        <img src="static/img/etak-teejoon.png">
+                    </section>
+                    <section>
+                        raudteed<br>
+                        <small>
+                            <a href="http://download.geofabrik.de/europe/estonia.html"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                OSM
+                            </a>,
+                            <a href="https://geoportaal.maaamet.ee/est/Andmete-tellimine/Avaandmed/Eesti-topograafia-andmekogu-ruumiandmed-p607.html"
+                                target="_blank" target="_blank" rel="noopener noreferrer">ETAK
+                            </a>
+                        </small>
+                    </section>
+                    <section>
+                        <img src="static/img/etak-roobastee.png">
+                    </section>
+                    <section>
+                        vooluveed<br>
+                        <small>
+                            <a href="http://download.geofabrik.de/europe/estonia.html"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                OSM
+                            </a>,
+                            <a href="https://geoportaal.maaamet.ee/est/Andmete-tellimine/Avaandmed/Eesti-topograafia-andmekogu-ruumiandmed-p607.html"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                ETAK
+                            </a>,
+                            <a href="https://gsavalik.envir.ee/geoserver/eelis/ows?service=WFS&version=2.0.0&request=GetFeature&typename=eelis:kr_vooluvesi&outputformat=application/json&count=1"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                KKR avalik WFS
+                            </a>
+                        </small>
+                    </section>
+                    <section>
+                        <img src="static/img/kkr-vooluvesi.png">
+                    </section>
+                    <section>
+                        ... ja asustusüksused<br>
+                        <small>
+                            <a href="https://geoportaal.maaamet.ee/est/Andmed-ja-kaardid/Haldus-ja-asustusjaotus-p119.html"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                EHAK
+                            </a>
+                        </small>
+                    </section>
+                    <section>
+                        <small>seejuures</small><br>
+                        asustusüksuste piirjooned <i>venitame välja</i> veekogudele/riigipiirini<br>
+                        <small>kui huvi, siis selle kohta kuidas, saab lugeda
+                            <a href="https://tkardi.ee/writeup/post/2018/07/21/subdividing-space/"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                siit
+                            </a>
+                        </small>
+                    </section>
+                    <section>
+                        <img src="static/img/ehak-asustus.png">
+                    </section>
+                    <section>
+                        lükkame kõik need andmed kokku<br>
+                        <small>ja saame terve hunniku risti-rästi jooni</small><br>
+                        ehk "müra"
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-noise.png">
+                    </section>
+                    <section>
+                        <small>kuigi tegelikult</small><br>
+                        joonistuvad siit asulates välja päris ilusad <i>kvartalid</i>
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-detail-noise.png">
+                    </section>
+                    <section>
+                        ning tuues pildile tagasi selle loo peategelased<br>
+                        <small>värvitud sihtnumbri järgi</small>
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-detail-noise-address-by-zip.png">
+                    </section>
+                    <section>
+                        <small>seega:</small><br>
+                        oleks vaja joontest mingisugused mõistlikud polügonid saada<br>
+                        <small>ja seejärel neisse jäävate punktide alusel alad lihtsalt <i>klassifitseerida</i></small>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        appi tuleb
+                        <a href="http://postgis.net/"
+                            target="_blank" target="_blank" rel="noopener noreferrer">
+                            PostGIS
+                        </a><br>
+                        <small>- jeee! :) -</small>
+                    </section>
+                    <section>
+                        <small>esiteks</small><br>
+                        <b>purusta</b> <i>mürajooned</i> kõigis
+                        omavahelistes ristumiskohtades.
+                    </section>
+                    <section>
+                        <small>pm sama, mis teeksid teejoontest navi-kõlbulike andmete loomisel</small>
+                    </section>
+                    <section>
+                        <small>teiseks</small><br>
+                        <b>kombineeri</b> tekkinud lõigud omavahel
+                        kokku polügonideks (kutsume neid <i>kvartaliteks</i>)
+                    </section>
+                    <section>
+                        <small>vt lisaks
+                            <a href="https://postgis.net/docs/ST_Polygonize.html"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                st_polygonize</a>,
+                            <a href="https://postgis.net/docs/ST_Node.html"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                st_node</a>,
+                            <a href="https://postgis.net/docs/ST_Snap.html"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                st_snap
+                            </a>
+                        </small>
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-noisemerged.png">
+                    </section>
+                    <section>
+                        <small>kolmandaks</small><br>
+                        topokontrollid - auke ei tohiks olla, ülekatteid ei tohiks olla<br>
+                        <small>nt
+                            <a href="https://grass.osgeo.org/"
+                                target="_blank" target="_blank" rel="noopener noreferrer">
+                                GRASSGIS
+                            </a>
+                        </small>
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-detail-noisemerged-address-by-zip.png">
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        ja siit edasi klassifitseerime <i>kvartali</i><br>
+                        <small>temasse jäävate punktide atribuutika (nt sihtnumber) järgi</small>
+                    </section>
+                    <section>
+                        rääkides sihtnumbritest<br>
+                        <small>siis tegelikult on</small><br>
+                        väga suures enamuses asustusüksuse kohta kasutusel vaid <b>üks</b> (kandeala) sihtnumber
+                    </section>
+                    <section>
+                        nii et tegelikult saame me enamjagu aladest paika juba eelnevalt<br>
+                        <small>kuid edasi...</small>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <small>esiteks</small><br>
+                        üks kvartal - üks sihtnumber
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-detail-unique-zip.png">
+                    </section>
+                    <section>
+                        värvides need sihtnumbri väärtuse järgi
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-detail-unique-by-zip.png">
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-unique-by-zip.png">
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <small>teiseks</small><br>
+                        üks kvartal - mitu sihtnumbrit<br>
+                        <small>(peame jagama kvartali osadeks)</small>
+                    </section>
+                    <section>
+                        Voronoid aadresspunktidele iga kvartali kaupa?
+                    </section>
+                    <section>
+                        tänu katastriandmete avamisele<br>
+                        <small>MAA-AMET, AITÄH! :)</small><br>
+                        saame täpsemal jagamisel kasutada katastriüksuseid.
+                    </section>
+                    <section>
+                        <small>siin samuti</small><br>
+                        üks kataster - üks sihtnumber <b>*</b>
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-detail-unique-by-zip-kataster.png">
+                    </section>
+                    <section>
+                        ja pannes kaks kihti kokku saame
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-detail-unique-by-zip-kataster-2.png">
+                    </section>
+                    <section>
+                        <small>oot-oot-oot!!!</small><br>
+                        katastri järgi pole terve kvartal ju täidetud!
+                    </section>
+                    <section>
+                        <small>täpselt nii...</small><br>
+                        pole hullu, jagame kvartali <i>tühja ruumi</i> selles olevate alade vahel lihtsalt ära
+                    </section>
+                    <section>
+                        ...<br>
+                        <small><small>(järgneb lõikamine, kleepimine, saagimine ja haamrikoputused PostGISis)</small></small>
+
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-detail-unique-by-zip-kataster-trimmed.png">
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <small>kolmandaks</small><br>
+                        üks kvartal - mitte ühtegi sihtnumbrit
+                    </section>
+                    <section>
+                        alustame <b><i>aukudest</i></b><br>
+                        kui klassifitseerimata kvartalit ümbritseb ainult sama sihtnumbriga ala, siis määrame samasse
+                    </section>
+                    <section>
+                        samas ülejäänud on samuti <i>augud</i><br>
+                        <small>lahendame nad siis ühe käiguga</small>
+                    </section>
+                    <section>
+                        <small>kaks võimalust</small><br>
+                        - jagame võrdselt piirnevate kvartalite vahel<br>
+                        - klassifitseerime selleks, millega suurim ühine piir
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-detail-unique-by-zip-almost-done.png">
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-detail-almost-done.png">
+                    </section>
+                    <section>
+                        <img src="static/img/tartumaa-unique-by-zip-almost-done.png">
+                    </section>
+                    <section>
+                        <img src="static/img/unique-by-zip-almost-done.png">
+                    </section>
+                </section>
+
+
+                <section>
+    				<section>
+                        <small>
+                            @tkardi<br>
+                            <a href="mailto:tonis.kardi@gmail.com">tonis.kardi@gmail.com</a>
+                        </small>
+                    </section>
+				</section>
+			</div>
+		</div>
+
+		<script src="static/reveal.js-3.5.0/lib/js/head.min.js"></script>
+		<script src="static/reveal.js-3.5.0/js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'static/reveal.js-3.5.0/plugin/markdown/marked.js' },
+					{ src: 'static/reveal.js-3.5.0/plugin/markdown/markdown.js' },
+					{ src: 'static/reveal.js-3.5.0/plugin/notes/notes.js', async: true },
+					{ src: 'static/reveal.js-3.5.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
