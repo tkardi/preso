@@ -1,0 +1,559 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>geodata management in Omniva</title>
+
+		<link rel="stylesheet" href="static/reveal.js-3.5.0/css/reveal.css">
+		<link rel="stylesheet" href="static/reveal.js-3.5.0/css/theme/white.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="static/reveal.js-3.5.0/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'static/reveal.js-3.5.0/css/print/pdf.css' : 'static/reveal.js-3.5.0/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h2>Geodata management in Omniva</h2>
+            <small></small>
+            <br><br><br><br>
+						<div align="right">
+							<small>
+                @tkardi<br>
+                Tõnis Kärdi<br>
+                LonLat OÜ<br>
+	              <a href="mailto:tonis.kardi@gmail.com">tonis.kardi@gmail.com</a>
+	            </small>
+						</div>
+				</section>
+
+        <section>
+					<section>
+						<a href="https://tkardi.github.io/preso/sotmsee-2019/"
+							target="_blank" rel="noopener noreferrer">
+ 							https://tkardi.github.io/<br>
+							preso/<br>
+							sotmsee-2019
+						</a>
+					</section>
+          <section>
+            <h2>a short commercial break</h2>
+          </section>
+          <section
+            data-background-image="static/img/foss4g-2019.png"
+            data-background-size="contain">
+          </section>
+          <section>
+            <h3>
+              <a href="https://media.ccc.de/c/foss4g2019"
+                target="_blank" rel="noopener noreferrer">
+                https://media.ccc.de/c/<br>foss4g2019
+              </a>
+            </h3>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>technology stack</h2>
+            <small>(the geodata perspective)</small>
+          </section>
+          <section>
+            MS SQLServer<br>
+            <small>database backend</small>
+          </section>
+          <section>
+            GeoServer<br>
+            <small>serving WMS/TMS/WFS + vector tiles</small><br>
+            <small>MS SQLServer</small>
+          </section>
+          <section>
+            OpenLayers + React<br>
+            <small>standalone application + embedded maps in UI</small><br>
+            <small>MS SQLServer, GeoServer</small>
+          </section>
+          <section>
+            ElasticSearch<br>
+            <small>for serving all the geocoding needs</small><br>
+            <small>MS SQLServer, GeoServer, OpenLayers + React</small>
+          </section>
+          <section>
+            <small>and</small><br>
+            BitBucket, Jenkins,..
+          </section>
+          <section>
+            <small>in addition</small><br>
+            PostgreSQL/PostGIS, QGIS, OGR,<br>
+            Python ...
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>datasets</h2>
+          </section>
+          <section
+            data-background-image="static/img/baltic-ap.png"
+            data-background-size="contain">
+            addresses<br>
+            <small>EE, LV, LT</small>
+          </section>
+          <section>
+            (some more) addresses<br>
+            <small>foreign + <i>omniva</i>-addresses</small>
+          </section>
+          <section
+            data-background="static/img/gc-animation.gif"
+            data-background-image="static/img/gc-animation.gif"
+            data-background-size="contain"
+            style="color:#eee;text-shadow:2px 2px 2px #222">
+            <div class="fragment" data-fragment-index="1">
+              <small><i>successful</i></small>
+            </div>
+            <div class="fragment" data-fragment-index="0">
+              geocoding service calls in April 2019
+            </div>
+          </section>
+					<section
+            data-background="static/img/up-anim.gif"
+            data-background-image="static/img/up-anim.gif"
+            data-background-size="contain"
+            style="color:#222;text-shadow:2px 2px 2px #eee">
+            <div class="fragment" data-fragment-index="0">
+              a take on <i>unknown pleasures</i>
+            </div>
+						<div class="fragment" data-fragment-index="1">
+							<small>
+                but this is not what we wanted to talk about here
+							</small>
+            </div>
+          </section>
+          <section>
+            service areas<br>
+            <small>(courier-, zip-, hub-, advertisement-, and parcelmachine areas)</small>
+          </section>
+          <section>
+            price and availability zone areas<br>
+            <small>(because the cost does depend on <i>where</i> and <i>what</i> aswell)</small>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>data management</h2>
+          </section>
+          <section>
+            addresses<br>
+            <small>updated nightly* from official sources</small><br>
+            <div align="right">
+              <small>* where applicable :)</small>
+            </div>
+          </section>
+          <section
+            data-background-image="static/img/baltic-ziparea.png"
+            data-background-size="contain"
+            style="color:#eee;text-shadow:2px 2px 2px #222">
+            <div class="fragment" data-fragment-index="0">
+              calculate zipcodes to addresses<br>
+              <small>from zipcode areas</small>
+            </div>
+          </section>
+        </section>
+
+				<section>
+          <section>
+            <h2>zipcode areas</h2>
+            <small>(a little side-adventure)</small>
+          </section>
+          <section>
+            for a longer discussion on this<br>
+            <small>
+							<a href="https://tkardi.ee/writeup/post/2018/07/22/from-points-to-polygons/"
+                target="_blank" rel="noopener noreferrer">
+                https://tkardi.ee/writeup/post/2018/07/22/from-points-to-polygons/
+              </a>
+						</small>
+          </section>
+          <section>
+            <image src="static/img/address_voronoi_by_zip.png"/>
+            <div align="right">
+              <small>Address point voronois for Tartu county, colored by zipcode value</small>
+            </div>
+          </section>
+          <section>
+            <image src="static/img/address_voronoi_by_zip_detail.png"/>
+            <div align="right">
+              <small>Address point voronois for Tartu city, colored by zipcode value</small>
+            </div>
+          </section>
+          <section>
+            <image src="static/img/tartumaa-detail-almost-done.png"/>
+            <div align="right">
+              <small>Zipcode areas (colored by zipcode value) with address point voronoi boundaries overlayed (red lines) for city of Tartu</small>
+            </div>
+          </section>
+        </section>
+
+				<section>
+          <section>
+            <h2>what about other areas?</h2>
+            <div class="fragment" data-fragment-index="0">
+              <small>why not, let's draw some!</small>
+            </div>
+          </section>
+          <section>
+            quick piloting with PostgreSQL+GeoServer+OpenLayers<br>
+            <small>and <i>real</i> data starts rolling in<br>
+              (in a <i>couple</i> of days)
+            </small>
+          </section>
+          <section>
+            <small>actually</small><br>
+            a few weeks later
+          </section>
+          <section
+            data-background="https://i.giphy.com/media/X83Y7r03T6uty/giphy.gif"
+            data-background-image="https://i.giphy.com/media/X83Y7r03T6uty/giphy.gif">
+            <p class="fragment" data-fragment-index="0">
+              <small>ok-ok... it wasn't really this bad :)</small>
+            </p>
+          </section>
+          <section>
+            <small>but still</small><br>
+            <div class="fragment shrink" data-fragment-index="0">~10 different <i>logistics network</i> types</div>
+            <div class="fragment fade-out" data-fragment-index="0">(PARCEL, ADVERTISEMENT, CUMBERSOME, LETTER, PERIODICALS, etc.)</div>
+            <div class="fragment fade-in" data-fragment-index="0">served by around 2K routes</div>
+            <div class="fragment fade-in-then-out" data-fragment-index="1">at different weekdays</div>
+            <div class="fragment fade-in-then-out" data-fragment-index="1">and different times</div>
+            <div class="fragment fade-in-then-out" data-fragment-index="1">using different-sized modes of transit</div>
+          </section>
+          <section>
+            <div>
+              <small>~10 different <i>logistics network</i> types</small>
+            </div>
+            <div>
+              <small>served by around 2K routes</small>
+            </div>
+              <p class="fragment" data-fragment-index="0">
+                - with some of them allowed to spatially overlap
+              </p>
+              <p class="fragment" data-fragment-index="1">
+                .. and others not
+              </p>
+              <p class="fragment" data-fragment-index="2">
+                - some having to cover the whole country
+              </p>
+              <p class="fragment" data-fragment-index="3">
+                .. and others not
+              </p>
+              <p class="fragment" data-fragment-index="4">
+                - this data must be editable on the go
+              </p>
+              <p class="fragment" data-fragment-index="5">
+                .. w/o a <i>GIS specialist</i> in between to manage the edits
+              </p>
+            </section>
+            <section>
+              all cool and all<br>
+              <small>but quite a mess when trying to validate spatially</small>
+            </section>
+            <section>
+              <small>and by all means</small><br>
+              no disrespect towards the people who did the digitizing work<br>
+              <small>(basically with no prior experience)</small>
+            </section>
+            <section>
+              <image src="static/img/areas-border-snapping.png"/>
+              <div align="right">
+                <small>one of the early screenshots of areas with <i>similar</i> - but not quite - boundaries (purple)</small>
+              </div>
+            </section>
+            <section>
+              <small>and btw</small><br>
+              this is only courier areas we're talking about here
+            </section>
+            <section>
+              <small>so</small><br>
+              what do we want?
+            </section>
+            <section>
+              as much topological correctness as we can get
+              <p class="fragment" data-fragment-index="0">with the least amount of effort to enforce it</p>
+              <p class="fragment" data-fragment-index="1"><small>(because SQLServer)</small></p>
+            </section>
+            <section>
+              <small>and</small><br>
+              a *map* UI that is very easy to understand/use
+              <p class="fragment" data-fragment-index="0"> <small>so forget that fancy GIS terminology</small></p>
+            </section>
+            <section>
+              when do we want it?
+            </section>
+            <section>
+              :)
+            </section>
+          </section>
+
+					<section>
+            <section>
+              <h2>wouldn't it be easy if ..</h2>
+            </section>
+            <section>
+              all areas would be based on zipcodes?
+              <p class="fragment" data-fragment-index="0"> <small>all addresses have them</small></p>
+              <p class="fragment" data-fragment-index="1"> <small>and all services are delivered to an address</small></p>
+            </section>
+            <section>
+              <small>unfortunately</small><br>
+              zipcode areas are too broad for this.<br>
+              still need to split them.
+            </section>
+          </section>
+
+					<section>
+            <section>
+              <h2>enter <b>BLOCKS</b></h2>
+            </section>
+            <section>
+              <image src="static/img/blocks-detail.png"/>
+              <div align="right">
+                <small>building blocks for describing any type of service areas (purple borders)</small>
+              </div>
+            </section>
+            <section>
+              based loosely on
+              <div class="fragment" data-fragment-index="0"><small>- settlement units' borders</small></div>
+              <div class="fragment" data-fragment-index="1"><small>- road network</small></div>
+              <div class="fragment" data-fragment-index="2"><small>- railways</small></div>
+              <div class="fragment" data-fragment-index="3"><small>- river centerlines</small></div>
+              <div class="fragment" data-fragment-index="4"><small>- cadastral parcels*</small>
+                <div align="right">
+                  <small>* where applicable</small>
+                </div>
+              </div>
+            </section>
+            <section>
+              no gaps nor holes, no overlaps<br>
+              <small>we've made sure of that beforehand</small>
+            </section>
+            <section>
+              <small>and the coolest thing?</small><br>
+              <div class="fragment" data-fragment-index="0">we can use <i>VECTOR TILES</i> for editing data</div>
+            </section>
+            <section>
+              <small>for creating/modifying a geometry</small><br>
+              <div class="fragment" data-fragment-index="0">simply select the blocks one-by-one</div>
+              <div class="fragment" data-fragment-index="1">or by rubberband</div>
+              <div class="fragment" data-fragment-index="2">or you can <i>point-click-clone</i> any other existing area</div>
+            </section>
+            <section>
+              <small>because</small><br>
+              <div class="fragment" data-fragment-index="0">the area's geometry (<i>aggregate</i>) is
+                defined through an array of block identifiers
+              </div>
+            </section>
+            <section>
+              <small><small>
+                761441,762847,765439,766291,766292,766422,767108,767109,767110,767111,767112,767115,767116,767117,767118,767119,767120,767121,
+                767124,767126,767127,767130,767131,767139,767142,767143,767161,767163,767172,767177,767178,767183,767184,767194,767195,791695,
+                791696,791697,791698,794228,794229,794230,794231,794232,794233,795309,795433,795434,795886,795894,796337,797490,797492,797494,
+                797499,797500,797504,797505,797506,797507,797508,797510,797511,797514,797522,797528,797529,797590,797611,797690,797691,797692,
+                797693,797701,797708,797709,797710,797715,798901,798902,798935,884794,885585,885586,885600,885601,885602,890103,890135,890136,
+                890150,890151,890152,891468,891956,891957,892034,893935,893936,894618,895076,895084,895085,895172,897019,897020,897021,897022,
+                897023,897024,897025,899109,904019,906178,910239,917264,917265,920566,920567,926796,926797,928141,928289,930713,934876,938345,
+                938350,938351,938352,949134,949258,953910,953911,956797,956798,959870,959910,959911,963102,963130,963131,963135,963136,966234,
+                966560,966561,966563,966564,966565,970029,970030,970031,970032,970033,970034,973474,973475,973476,973477,973478,973479,973480,
+                973521,973522,977173,977174,977176,977207,981178,985060,985077,989182,989183,989184,989185,989202,989203,989204,993184,993188,
+                993191,993200,993231,997465,997476,997477,1001878,1014952,1014953,1014954,1014955,1014956,1014957,1019297,1019527,1019528,
+                1019529,1019587,1023967,1023994,1024014,1024017,1024018,1024019,1024020,1024044,1028558,1033129,1033130,1033131,1033132,1033133,
+                1037661,1037662,1037663,1047311,1047312,1047313,1052066,1052067,1052068,1052069,1052071,1052072,1056845,1056846,1056848,1056851,
+                1061699,1061767,1061768,1066630,1066631,1066632,1071365,1071366,1071369,1071371,1071372,1071649,1076408,1076411,1081418,1081478,
+                1086216,1086218,1086219,1086220,1091022,1091023,1091024,1091025,1095725,1095726,1095727,1095735,1095736,1095738,1095740,1100680,
+                1105672,1105678,1105734,1105735,1110665,1110750,1110755,1115403,1115404,1115419,1120339,1130272,1130273,1130274,1139961,1139962,
+                1139963,1139966,1144844,1144845,1144846,1144848,1149801,1149804,1149807,1149808,1149810,1149819,1149847,1154795,1154798,1154861,
+                1154862,1159463,1159464,1159502,1159504,1159549,1164393,1169301,1169302,1169303,1169569,1173957,1173969,1174040,1174042,1174044,
+                1178861,1178866,1178870,1178881,1178882,1178883,1183694,1183695,1183746,1188477,1188480,1188481,1188482,1188483,1188487,1193289,
+                1193295,1193300,1193301,1193302,1198214,1198215,1198216,1198217,1198218,1202926,1202927,1202929,1202930,1202939,1207508,1207510,
+                1207545,1212184,1216726,1216771,1221354,1221393,1226222,1230888,1230891,1235530,1235536,1235537,1235538,1235540,1239968,1239970,
+                1239971,1239972,1240008,1244713,1254122,1254123,1254126,1254179,1258840,1258845,1258851,1258852,1263518,1263522,1263526,1263527,
+                1272675,1272682,1272684,1272727,1277204,1281445,1281499,1285810,1285813,1285814,1289893,1290273,1290274,1290276,1290277,1290278,
+                1290319,1294573,1294642,1299172,1299173,1299174,1299177,1303728,1303729,1303731,1303732,1303738,1308244,1308245,1308246,1308247,
+                1308250,1308251,1308255,1308281,1308300,1312568,1312572,1312573,1312574,1317013,1317017,1317021,1321499,1321516,1321518,1321520,
+                1321521,1321579,1325913,1330417,1334719,1334772,1343367,1347781,1347783,1347785,1347786,1347791,1347837,1347844,1352029,1352037,
+                1352038,1352042,1352043,1352077,1356521,1356522,1360801,1360803,1360851,1360862,1364966,1365053,1365054,1365103,1365113,1365114,
+                1365116,1365119,1369118,1369451,1369453,1369454,1369459,1373702,1373704,1373705,1373706,1378025,1382108,1382109,1382112,1382113,
+                1382368,1386328,1386330,1386331,1386332,1386333,1394544,1394546,1394547,1398649,1398652,1398658,1402870,1411208,1411209,1411215,
+                1415493,1415494,1415495,1415498,1419202,1419666,1419682,1423900,1423901,1423908,1427113,1427980,1427999,1428001,1428037,1432087,
+                1432134,1436122,1436123,1436128,1436132,1436135,1436136,1440227,1440236,1440237,1440297,1444394,1444434,1448524,1448525,1448526,
+                1452448,1452510,1452512,1452513,1456576,1456580,1456582,1456623,1460611,1460612,1460616,1464605,1468856,1468857,1468860,1472968,
+                1477164,1481167,1481198,1481201,1483882,1485125,1485126,1485128,1485171,1489213,1489216,1489217,1489219,1489277,1493137,1493141,
+                1493142,1493143,1497219,1497220,1497221,1501222,1501229,1505176,1505177,1505179,1505180,1509224,1509231,1509232,1509235,1509281,
+                1509485,1512970,1513186,1513188,1517094,1517095,1517354,1517355,1517356,1517618
+              </small></small>
+            </section>
+            <section>
+              <small>and in the database</small><br>
+              <p class="fragment" data-fragment-index="0">this array is unnested + the geometry aggregate (re-)calculated</p>
+            </section>
+            <section>
+              <image src="static/img/block-based-area.png"/>
+              <div align="right">
+                <small>an aggregate area (light blue) composed on the fly out of<br>
+                inbound block (purple borders) identifiers</small>
+              </div>
+            </section>
+            <section
+              data-background-image="static/img/blocks-baltics.png"
+              data-background-size="contain"
+              style="color:#eee;text-shadow:2px 2px 2px #222">
+              <div
+                class="fragment"
+                data-fragment-index="0">
+                <small>blocks for all the Baltics (EE, LV, LT)</small>
+              </div>
+            </section>
+						<section
+						  data-background-image="https://i.giphy.com/media/6J9EYB2Z27Qg8/giphy.gif"
+						  data-background-size="contain"
+					    style="color:#eee;text-shadow:2px 2px 2px #222">
+							<p class="fragment" data-fragment-index="0">
+							  WUT?
+					  	</p>
+						</section>
+						<section>
+					  	calculating aggregate unions of 50K+ polygons
+					    <p class="fragment" data-fragment-index="0">
+					  	  <small>is very tiresome for SQLServer</small>
+					  	</p>
+							<p class="fragment" data-fragment-index="1">
+						  	and it is painful for the operator<br>
+							  <small>to <i>cherry-pick</i> 50K areas at a time</small>
+					  	</p>
+							<p class="fragment" data-fragment-index="2">
+							  <small>if instead you could only pick one</small>
+					  	</p>
+						</section>
+          </section>
+
+					<section>
+					  <section>
+					    <h2>enter <b><i>SUPER</i>BLOCKS</b></h2>
+					  </section>
+					  <section
+              data-background-image="static/img/blocks-baltics.png"
+              data-background-size="contain"
+              style="color:#eee;text-shadow:2px 2px 2px #222">
+							<p class="fragment" data-fragment-index="0">
+							  blocks
+						 	</p>
+            </section>
+						<section>
+              <i>super</i>blocks are essentially groups of blocks<br>
+							<small>aggregated over <i>arbitrary</i> attributes already beforehand</small>
+            </section>
+						<section
+              data-background-image="static/img/superblocks-baltics-l3.png"
+              data-background-size="contain"
+              style="color:#eee;text-shadow:2px 2px 2px #222">
+							<p class="fragment" data-fragment-index="0">
+							  group_code == 'L3'
+						 	</p>
+            </section>
+						<section
+              data-background-image="static/img/superblocks-baltics-l2.png"
+              data-background-size="contain"
+              style="color:#eee;text-shadow:2px 2px 2px #222">
+							<p class="fragment" data-fragment-index="0">
+							  group_code == 'L2'
+						 	</p>
+            </section>
+						<section
+              data-background-image="static/img/superblocks-baltics-l0.png"
+              data-background-size="contain"
+              style="color:#eee;text-shadow:2px 2px 2px #222">
+							<p class="fragment" data-fragment-index="0">
+							  group_code == 'L0'
+								</p>
+            </section>
+						<section>
+						  now the identifier arrays are shorter<br>
+						  <small>SQLServer seems to be happier?</small>
+						</section>
+						<section>
+						  and we can still use either<br>
+						  <small>or both in combination</small>
+						</section>
+						<section
+              data-background-image="static/img/all-blocks-baltics.png"
+              data-background-size="contain"
+              style="color:#eee;text-shadow:2px 2px 2px #222">
+              <div
+                class="fragment"
+                data-fragment-index="0">
+                <small>superblocks for all the Baltics (EE, LV, LT)</small>
+              </div>
+            </section>
+					</section>
+
+          <section>
+            <section>
+              <h2>Thank you!</h2>
+              <div>
+                <a href="http://uec.ee/"
+                  target="_blank" rel="noopener noreferrer">
+                  UEC OÜ
+                </a> + <a href="https://www.omniva.ee/eng"
+                  target="_blank" rel="noopener noreferrer">
+                  Omniva AS
+                </a>
+              </div>
+              <div>
+                <small>for the possibility to work on some very interesting problems<br>
+                  together with a really cool team
+                </small>
+              </div>
+            </section>
+    				<section>
+              <small>
+                  @tkardi<br>
+                  <a href="mailto:tonis.kardi@gmail.com">tonis.kardi@gmail.com</a>
+              </small>
+            </section>
+				</section>
+
+
+
+
+			</div>
+		</div>
+
+		<script src="static/reveal.js-3.5.0/lib/js/head.min.js"></script>
+		<script src="static/reveal.js-3.5.0/js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'static/reveal.js-3.5.0/plugin/markdown/marked.js' },
+					{ src: 'static/reveal.js-3.5.0/plugin/markdown/markdown.js' },
+					{ src: 'static/reveal.js-3.5.0/plugin/notes/notes.js', async: true },
+					{ src: 'static/reveal.js-3.5.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
