@@ -1,0 +1,739 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>the saints of postgis</title>
+
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/reveal.js@3.5.0/css/reveal.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/reveal.js@3.5.0/css/theme/white.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/reveal.js@3.5.0/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'https://unpkg.com/reveal.js@3.5.0/css/print/pdf.css' : 'https://unpkg.com/reveal.js@3.5.0/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <style>
+    .reveal pre code {
+      font-size: 0.7em;
+      line-height: 1.1;
+    }
+
+    .reveal pre {
+      width: 120%;
+      height: 200%;
+      margin-left: -10%;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h2>The ST<small style="vertical-align:baseline">s</small>* of PostGIS</h2>
+            <small style="text-align:left">* saints?<br>* spatial types?</small>
+            <br><br><br><br>
+            <div align="right">
+              <small>
+                @tkardi<br>
+                Tõnis Kärdi<br>
+                LonLat OÜ / UEC OÜ<br>
+                <a href="mailto:tonis.kardi@gmail.com">tonis.kardi@gmail.com</a>
+              </small>
+            </div>
+        </section>
+
+        <section>
+          <section>
+            <a href="https://tkardi.github.io/preso/balticgit-2022/"
+              target="_blank" rel="noopener noreferrer">
+               https://tkardi.github.io/<br>
+              preso/<br>
+              balticgit-2022/
+            </a>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>where's that bus at?</h2>
+            <small>(supposedly)</small>
+          </section>
+          <section>
+            On a cold winter evening some 5 years ago pick up a friend from the train station<br>
+            <small>(but got there half an hour early)</small>
+          </section>
+          <section>
+            Estimate real-time locations based on GTFS*<br>
+            <small>
+              (<a href="http://www.peatus.ee/gtfs/" target="_blank" rel="noopener noreferrer">
+                data by the</a> Estonian Road Administration)</small>
+            <div align="right">
+              <br><br><br><br>
+              <small>* - The General Transit Feed Specification<br>
+                <a href="https://developers.google.com/transit/gtfs/" target="_blank" rel="noopener noreferrer">https://developers.google.com/transit/gtfs/</a>
+              </small>
+            </div>
+          </section>
+          <section>
+            <img style="border:none" src="./static/img/trip.png">
+            <div align="right">
+              <small>length: ~ 3.5 km</small>
+            </div>
+          </section>
+          <section>
+            <img style="background-color:white;border:none;width:75%" src="./static/img/trip-timeline.png"/>
+            <div align="right">
+              <small>
+                Based on current time calculate fraction of time between trip start and end and then
+								<a href="https://postgis.net/docs/ST_LineInterpolatePoint.html" target="_blank" rel="noopener noreferrer">st_lineinterpolatepoint</a>
+              </small>
+          </section>
+          <section>
+            <img style="border:none" src="./static/img/full-trip.gif">
+            <div align="right">
+              <small>length: ~ 3.5 km, total time: 2 minutes</small>
+            </div>
+          </section>
+          <section>
+            Cool!<br>
+            <small>(but with intermediate stops this bus might never be on time)</small>
+          </section>
+          <section>
+            <img style="border:none" src="./static/img/trip-stops.png">
+            <div align="right">
+              <small>A to B: 1.8 km, B to A: 1.7 km</small>
+            </div>
+          </section>
+          <section>
+            <img style="border:none" src="./static/img/full-trip-stops.gif">
+            <div align="right">
+              <small>A to B: 30 secs, B to A: 90 secs</small>
+            </div>
+          </section>
+          <section>
+            But how are passangers supposed to get on and off?<br>
+            <small>(add <b>impedance</b> to traveltime at stops)</small>
+          </section>
+          <section>
+            <img style="background-color:white;border:none;width:75%" src="./static/img/kiirendus.png"/>
+            <div align="right">
+              <small>
+                Adding acceleration/deceleration to transit location calculation.<br>
+                (see <a href="https://github.com/tkardi/eoy/blob/dockerize/src/resources/db/init.sql#L185" target="_blank" rel="noopener noreferrer">here</a> for details)
+              </small>
+            </div>
+          </section>
+          <section>
+            <img style="border:none" src="./static/img/full-trip-stops-acc.gif">
+            <div align="right">
+              <small>accelerate / decelarate: 8 secs, stop 3 + 3 secs</small>
+            </div>
+          </section>
+          <section>
+            <img style="border:none" src="./static/img/full-trip-compare.gif">
+            <div align="right">
+              <small><b>Red</b>: interpolate whole trip. <b>Blue</b>: interpolate using stops. <b>Green</b>: interpolate using stops and impeded time</small>
+            </div>
+          </section>
+          <section>
+            <img style="border:none" src="./static/img/trip-dashboard.gif">
+            <div align="right">
+              <small>
+                <a href="https://tkardi.github.io/eoy/example/current.html?lon=26.72312736511231&lat=58.37120753718288&z=13" target="_blank" rel="noopener noreferrer">example dashboard</a> and
+                <a href="https://tkardi.ee/gtfs/current/locations/?format=json" target="_blank" rel="noopener noreferrer">API</a>
+              </small>
+            </div>
+          </section>
+          <section>
+            <a href="https://github.com/tkardi/eoy/tree/dockerize" target="_blank" rel="noopener noreferrer">https://github.com/tkardi/eoy/tree/dockerize</a>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>the projection tango</h2>
+            <small><i>madagascator</i></small>
+          </section>
+          <section>
+            <div align="center">
+              <blockquote class="twitter-tweet">
+                <p lang="en" dir="ltr">I think I&#39;ve earned my geonerd points today. <br><br>
+                  (re: <a href="https://t.co/84PGLpHLDZ">https://t.co/84PGLpHLDZ</a> )
+                  <a href="https://t.co/MZGwI76zSG">pic.twitter.com/MZGwI76zSG</a>
+                </p>&mdash; ⚛⚛⚛Iván Sánchez⚛⚛⚛ (@RealIvanSanchez)
+                <a href="https://twitter.com/RealIvanSanchez/status/1520105735073456128?ref_src=twsrc%5Etfw">April 29, 2022</a>
+              </blockquote>
+              <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+          </section>
+          <section>
+            <img style="border:none" src="https://pbs.twimg.com/media/FRmPK0RWQAAXi2-?format=jpg">
+            <div align="right">
+              <small>
+                Based on NaturalEarth country boundaries, and proccessed in PostGIS using
+                <a href="https://gist.github.com/tkardi/c295bbdcc2c7e21edb365fd3852894e9#file-gistfile1-txt" target="_blank" rel="noopener noreferrer">this SQL</a>
+              </small>
+            </div>
+          </section>
+          <section>
+            Errr.... what about <i>flatearthator</i>?
+          </section>
+          <section>
+            <img style="border:none" src="https://pbs.twimg.com/media/FRz52FFWYAAO9Fg?format=jpg">
+            <div align="right">
+              <small>
+                Based on NaturalEarth country boundaries, and proccessed in PostGIS using
+                <a href="https://gist.github.com/tkardi/c295bbdcc2c7e21edb365fd3852894e9#file-flatearth-tc" target="_blank" rel="noopener noreferrer">this SQL</a>
+              </small>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>#30DayMapChallenge</h2>
+            <small>(on
+              <a href="https://github.com/tjukanovt/30DayMapChallenge" target="_blank" rel="noopener noreferrer">GitHub</a> and
+              <a href="https://twitter.com/search?q=%2330daymapchallenge&src=typed_query&f=live" target="_blank" rel="noopener noreferrer">Twitter</a>)
+            </small>
+          </section>
+          <section>
+            Globe<br>
+            <small>(me going full-on estonian)</small>
+          </section>
+          <section>
+            <img style="border:none" src="./static/img/day-29-globe_low_res.gif">
+            <div align="right">
+              <small>
+                <a href="https://tkardi.ee/writeup/30daymapchallenge/29-globe/" target="_blank" rel="noopener noreferrer">SQL bits</a> and
+                <a href="https://tkardi.ee/writeup/img/30daymapchallenge/day-29-globe.gif" target="_blank" rel="noopener noreferrer">hi-fi version</a>
+              </small>
+            </div>
+          </section>
+          <section>
+            A peek at weather forecast<br>
+            <small>
+              (data courtesy of <a href="http://www.ilmateenistus.ee/?lang=en" target="_blank" rel="noopener noreferrer">Estonian Environment Agency</a>)
+            </small>
+          </section>
+          <section>
+            <img style="border:none;width:50%" src="https://beyondvinyl.co.uk/wp-content/uploads/2018/02/joy-pleas-front.jpg"><br>
+
+            <small><a href="https://en.wikipedia.org/wiki/Unknown_Pleasures" target="_blank" rel="noopener noreferrer">Unknown Pleasures</a> by Joy Division</small></small><br>
+            <small>(and air temperature forecast)</small>
+            <div align="right">
+              <small>
+                image: <a href="https://beyondvinyl.co.uk/product/joy-division-unknown-pleasures-vinyl-lp/" target="_blank" rel="noopener noreferrer">beyondvinyl.co.uk</a>
+              </small>
+            </div>
+          </section>
+          <section data-transition="slide-in fade-out">
+            <pre>
+              <code data-trim data-noescape>
+                select
+
+
+
+
+
+                                        st_force3d(
+                                            st_point(
+                                                x,
+                                                y + temperature * 1000
+                                            )
+                                        )
+
+
+
+
+
+                from (
+                  select temperature, valid_from, valid_to, x, y from phenomen
+                ) f
+                ;
+              </code>
+            </pre>
+            <div align="right">
+              <small>grid points to horizontal lines:</small><br>
+              <small>create a point shifting its y coordinate to the north by coefficent of temperature</small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <pre>
+              <code data-trim data-noescape>
+                select
+
+
+
+                                st_setsrid(
+                                    st_translate(
+                                        st_force3d(
+                                            st_point(
+                                                x,
+                                                y + temperature * 1000
+                                            )
+                                        ), 0, 0, temperature
+                                    ), 3301
+                                )
+
+
+
+                from (
+                  select temperature, valid_from, valid_to, x, y from phenomen
+                ) f
+                ;
+              </code>
+            </pre>
+            <div align="right">
+              <small>grid points to horizontal lines:</small><br>
+              <small>assign temperature value as z-coordinate to the point</small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <pre>
+              <code data-trim data-noescape>
+                select
+
+                        st_makeline(
+                            array_agg(
+                                st_setsrid(
+                                    st_translate(
+                                        st_force3d(
+                                            st_point(
+                                                x,
+                                                y + temperature * 1000
+                                            )
+                                        ), 0, 0, temperature
+                                    ), 3301
+                                ) order by x
+                            )
+                        )
+
+                from (
+                  select temperature, valid_from, valid_to, x, y from phenomen
+                ) f
+                group by y, valid_from, valid_to;
+              </code>
+            </pre>
+            <div align="right">
+              <small>grid points to horizontal lines:</small><br>
+              <small>aggregate all points on the same y coordinate to a line</small>
+            </div>
+          </section>
+          <section data-transition="fade-in slide-out">
+            <pre>
+              <code data-trim data-noescape>
+                select
+                    st_chaikinsmoothing(
+                        st_makeline(
+                            array_agg(
+                                st_setsrid(
+                                    st_translate(
+                                        st_force3d(
+                                            st_point(
+                                                x,
+                                                y + temperature * 1000
+                                            )
+                                        ), 0, 0, temperature
+                                    ), 3301
+                                ) order by x
+                            )
+                        ), 5
+                    ) as geom, y, valid_from, valid_to
+                from (
+                  select temperature, valid_from, valid_to, x, y from phenomen
+                ) f
+                group by y, valid_from, valid_to;
+              </code>
+            </pre>
+            <div align="right">
+              <small>grid points to horizontal lines:</small><br>
+              <small>apply Chaikin smoothing on the lines</small>
+            </div>
+          </section>
+          <section>
+            What about assigning different colors to different temperatures?<br>
+            <small>(sure, why not...)</small>
+          </section>
+          <section data-transition="slide-in fade-out">
+            <pre>
+              <code data-trim data-noescape>
+                with segments as (
+
+
+
+
+
+
+
+
+                        select
+                            oid, st_dumppoints(geom) as pt
+                        from
+                            chaikinlines_temperature
+
+                )
+                select
+                    *
+                from
+                    segments
+
+                ;
+              </code>
+            </pre>
+            <div align="right">
+              <small>split lines to parts for coloring:</small><br>
+              <small>dump all points</small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <pre>
+              <code data-trim data-noescape>
+                with segments as (
+                    select
+                        st_makeline(
+                            lag((pt).geom, 1, null) over(
+                                partition by y, valid_from order by valid_from, y, (pt).path
+                            ),
+                            (pt).geom
+                        ) as geom, valid_from, valid_to
+                    from (
+                        select
+                            oid, st_dumppoints(geom) as pt
+                        from
+                            chaikinlines_temperature
+                    ) as dumps
+                )
+                select
+                    *
+                from
+                    segments
+                where
+                    geom is not null;
+              </code>
+            </pre>
+            <div align="right">
+              <small>split lines to parts for coloring:</small><br>
+              <small>aggregate two consequtive points into a line</small>
+            </div>
+          </section>
+          <section data-transition="fade-in slide-out">
+            <pre>
+              <code data-trim data-noescape>
+                with segments as (
+                    select
+                        st_makeline(
+                            lag((pt).geom, 1, null) over(
+                                partition by y, valid_from order by valid_from, y, (pt).path
+                            ),
+                            (pt).geom
+                        ) as geom, valid_from, valid_to
+                    from (
+                        select
+                            oid, st_dumppoints(geom) as pt
+                        from
+                            chaikinlines_temperature
+                    ) as dumps
+                )
+                select
+                    geom, st_z(st_lineinterpolatepoint(geom, 0.5)) as temperature, valid_from, valid_to
+                from
+                    segments
+                where
+                    geom is not null;
+              </code>
+            </pre>
+            <div align="right">
+              <small>split lines to parts for coloring:</small><br>
+              <small>take the midpoint of the line and its interpolated z-coordinate as temperature value</small>
+            </div>
+          </section>
+          <section>
+            <img style="border:none;width:75%" src="./static/img/day-2-lines.gif">
+            <div align="right">
+              <small>
+                <a href="https://tkardi.ee/writeup/30daymapchallenge/02-lines/" target="_blank" rel="noopener noreferrer">SQL bits</a> and
+                <a href="https://tkardi.ee/writeup/img/30daymapchallenge/day-2-lines.gif" target="_blank" rel="noopener noreferrer">hi-fi version</a>
+              </small>
+            </div>
+          </section>
+          <section>
+            <img style="border:none;width:50%" src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Polypen_einer_Gorgonie.jpg"><br>
+
+            <small><a href="https://en.wikipedia.org/wiki/Polyp_(zoology)" target="_blank" rel="noopener noreferrer">Polyps</a></small><br>
+            <small>(and wind speed + direction forecast)</small>
+            <div align="right">
+              <small>
+                image: By <a class="external autonumber" href="https://en.wikipedia.org/wiki/Image:Gorgonian.Mgiangrasso.jpg" target="_blank" rel="noopener noreferrer">[1]</a>,
+                <a href="https://creativecommons.org/licenses/by-sa/2.5" title="Creative Commons Attribution-Share Alike 2.5" target="_blank" rel="noopener noreferrer">CC BY-SA 2.5</a>,
+                <a href="https://commons.wikimedia.org/w/index.php?curid=1863170" target="_blank" rel="noopener noreferrer">Link</a>
+              </small>
+            </div>
+          </section>
+          <section>
+            Use ellipses:<br>
+            <small>
+              - eccentricity for wind speed<br>
+              - turn angle for wind direction
+            </small>
+          </section>
+          <section>
+            <a href="https://trac.osgeo.org/postgis/wiki/UsersWikiplpgsqlfunctions#ConstructEllipsefromXY" target="_blank" rel="noopener noreferrer">st_ellipse</a> function off
+            <a href="https://trac.osgeo.org/postgis/wiki" target="_blank" rel="noopener noreferrer">PostGIS User's Wiki</a>
+          </section>
+          <section data-transition="slide-in fade-out">
+            <pre>
+              <code data-trim data-noescape>
+                select
+                    *
+
+
+
+
+
+
+
+
+
+
+                from (
+                    select
+                        st_transform(
+                            st_project(
+                                grid::geography, coalesce(wind_speed_mps,0)*500, radians(coalesce(wind_direction_deg, 0))-pi()
+                            )::geometry(point, 4326),
+                        3301) as geom, wind_speed_mps, wind_direction_deg, valid_from, valid_to
+                    from
+                        w.phenomen
+                ) f;
+              </code>
+            </pre>
+            <div align="right">
+              <small>grid points to ellipses:</small><br>
+              <small>shift grid point off its location by a factor of speed in the wind direction</small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <pre>
+              <code data-trim data-noescape>
+                select
+
+
+                            st_ellipse(
+                                st_x(geom), st_y(geom),
+                                2500, 2500 + (coalesce(wind_speed_mps,0)*1000), 0, 16
+                            )
+
+
+
+
+
+                from (
+                    select
+                        st_transform(
+                            st_project(
+                                grid::geography, coalesce(wind_speed_mps,0)*500, radians(coalesce(wind_direction_deg, 0))-pi()
+                            )::geometry(point, 4326),
+                        3301) as geom, wind_speed_mps, wind_direction_deg, valid_from, valid_to
+                    from
+                        w.phenomen
+                ) f;
+              </code>
+            </pre>
+            <div align="right">
+              <small>grid points to ellipses:</small><br>
+              <small>create an ellipse in the shifted position with the longer axis a factor of wind speed</small>
+            </div>
+          </section>
+          <section data-transition="fade-in slide-out">
+            <pre>
+              <code data-trim data-noescape>
+                select
+                    st_rotate(
+                        st_setsrid(
+                            st_ellipse(
+                                st_x(geom), st_y(geom),
+                                2500, 2500 + (coalesce(wind_speed_mps,0)*1000), 0, 16
+                            ),
+                            3301
+                        ),
+                        -1*(radians(wind_direction_deg) + pi()),
+                        geom
+                    ) as geom, wind_speed_mps, wind_direction_deg, valid_from, valid_to
+                from (
+                    select
+                        st_transform(
+                            st_project(
+                                grid::geography, coalesce(wind_speed_mps,0)*500, radians(coalesce(wind_direction_deg, 0))-pi()
+                            )::geometry(point, 4326),
+                        3301) as geom, wind_speed_mps, wind_direction_deg, valid_from, valid_to
+                    from
+                        w.phenomen
+                ) f;
+              </code>
+            </pre>
+            <div align="right">
+              <small>grid points to ellipses:</small><br>
+              <small>rotate the ellipse in the desired direction</small>
+            </div>
+          </section>
+          <section>
+            <img style="border:none;width:75%" src="./static/img/day-3-polygons_low_res.gif">
+            <div align="right">
+              <small>
+                <a href="https://tkardi.ee/writeup/30daymapchallenge/03-polygons/" target="_blank" rel="noopener noreferrer">SQL bits</a> and
+                <a href="https://tkardi.ee/writeup/img/30daymapchallenge/day-3-polygons.gif" target="_blank" rel="noopener noreferrer">hi-fi version</a>
+              </small>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>kartogramm</h2>
+          </section>
+
+        </section>
+
+        <section>
+          <section>
+            <h2>Polygonal expansion</h2>
+            <small>to fill <i>empty</i> space</small>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>from points to areas</h2>
+            <small>(my little adventure with creating zip code ares)</small>
+          </section>
+          <section data-transition="slide-in fade-out">
+            <image style="border:none" src="./static/img/address_voronoi_by_zip_detail.png"/>
+            <div align="right">
+              <small>Tartu: address point voronois colored by zipcode value</small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-noise.png"/>
+            <div align="right">
+              <small>Tartu: roads, rivers, railways etc. lines</small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-noise-address-by-zip.png"/>
+            <div align="right">
+              <small>Tartu: road, river, railway etc. lines and overlaid addresspoints colored by zip</small>
+            </div>
+          </section>
+					<section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-noisemerged-address-by-zip.png"/>
+            <div align="right">
+              <small>Tartu: road, river, railway etc. lines smashed into polygons (<i>quartiers</i>) and overlaid addresspoints colored by zip</small>
+            </div>
+          </section>
+					<section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-unique-by-zip.png"/>
+            <div align="right">
+              <small>All <i>quartiers</i> with only one zip</small>
+            </div>
+          </section>
+					<section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-unique-by-zip-kataster.png"/>
+            <div align="right">
+              <small>All cadastral parcels with only one zip</small>
+            </div>
+          </section>
+					<section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-unique-by-zip-kataster-2.png"/>
+            <div align="right">
+              <small>.. and merging these two together gives us already a pretty good coverage</small>
+            </div>
+          </section>
+					<section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-unique-by-zip-kataster-trimmed.png"/>
+            <div align="right">
+              <small>Divide the empty space within <i>quartiers</i> that have zips assigned</small>
+            </div>
+          </section>
+					<section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-unique-by-zip-almost-done.png"/>
+            <div align="right">
+              <small>Deal with address-pointless <i>quartiers</i>: longest bordering neighbor wins!</small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-almost-done.png"/>
+            <div align="right">
+              <small>Zipcode areas (colored by zipcode value) with address point voronoi boundaries overlayed (red lines) for city of Tartu</small>
+            </div>
+          </section>
+					<section data-transition="fade-in slide-out">
+            <image style="border:none" src="./static/img/unique-by-zip-almost-done.png"/>
+            <div align="right">
+              <small>Zipcode areas for the whole country</small>
+            </div>
+          </section>
+					<section>
+            for a longer discussion on this<br>
+            <small>
+              <a href="https://tkardi.ee/writeup/post/2018/07/22/from-points-to-polygons/"
+                target="_blank" rel="noopener noreferrer">
+                https://tkardi.ee/writeup/post/2018/07/22/from-points-to-polygons/
+              </a>
+            </small>
+          </section>
+					<section>
+            <small>also</small><br>a shoutout to
+            <a href="https://twitter.com/tjukanov"
+              target="_blank" rel="noopener noreferrer">@tjukanov</a>
+              <br><br><br>
+            <a href="https://media.ccc.de/v/bucharest-189-3-6-million-points-to-polygons-lessons-learned-while-generating-voting-districts-with-qgis-postgis-and-openjump-"
+              target="_blank" rel="noopener noreferrer">
+              https://media.ccc.de/v/bucharest-189-3-6-million-points-to-polygons-lessons-learned-while-generating-voting-districts-with-qgis-postgis-and-openjump-
+            </a>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <small>
+              @tkardi<br>
+              <a href="mailto:tonis.kardi@gmail.com">tonis.kardi@gmail.com</a>
+            </small>
+          </section>
+        </section>
+
+
+
+
+      </div>
+    </div>
+
+    <script type="text/javascript"  src="https://unpkg.com/reveal.js@3.5.0/lib/js/head.min.js"></script>
+    <script type="text/javascript"  src="https://unpkg.com/reveal.js@3.5.0/js/reveal.js"></script>
+
+    <script>
+      // More info https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        history: true,
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+          { src: 'https://unpkg.com/reveal.js@3.5.0/plugin/markdown/marked.js' },
+          { src: 'https://unpkg.com/reveal.js@3.5.0/plugin/markdown/markdown.js' },
+          { src: 'https://unpkg.com/reveal.js@3.5.0/plugin/embed-tweet/embed-tweet.js' },
+          { src: 'https://unpkg.com/reveal.js@3.5.0/plugin/notes/notes.js', async: true },
+          { src: 'https://unpkg.com/reveal.js@3.5.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
