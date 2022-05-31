@@ -174,6 +174,61 @@
               <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
             </div>
           </section>
+          <section data-transition="slide-in fade-out">
+            <small>shift North Pole to the equator at -30W and rotate Madagascar northwards</small><br>
+            <pre>
+              <code data-trim data-noescape>
+                select
+                    *
+
+
+
+
+
+                from (
+                    select
+                        gid, (st_dumppoints(geom)).*
+                    from
+                        ne_10m_admin_0_countries ) f
+
+
+                ;
+              </code>
+            </pre>
+            <div align="right">
+              <small>dump all vertices</small>
+            </div>
+          </section>
+          <section data-transition="fade-in slide-out">
+            <small>shift North Pole to the equator at -30W and rotate Madagascar northwards</small><br>
+            <pre>
+              <code data-trim data-noescape>
+                select
+                    st_project(
+                        st_setsrid(st_point(-30,0), 4326)::geography,
+                        st_distance(st_setsrid(st_point(0,90),4326)::geography, geom::geography),
+                        st_azimuth(st_setsrid(st_point(0,90),4326)::geography, geom::geography) - radians(125)
+                    )::geometry(point, 4326) as geom,
+                    row_number() over()::int as oid, gid, path
+                from (
+                    select
+                        gid, (st_dumppoints(geom)).*
+                    from
+                        ne_10m_admin_0_countries ) f
+                where
+                    st_y(geom) >-88
+                ;
+              </code>
+            </pre>
+            <div align="right">
+              <small>
+                <a href="https://postgis.net/docs/ST_Project.html" target="_blank" rel="noopener noreferrer">st_project</a>
+                a new point (
+                <a href="https://postgis.net/docs/geography.html" target="_blank" rel="noopener noreferrer">geography</a>
+                ) with the old distance and azimuth (minus constant)
+              </small>
+            </div>
+          </section>
           <section>
             <img style="border:none" src="https://pbs.twimg.com/media/FRmPK0RWQAAXi2-?format=jpg">
             <div align="right">
@@ -185,6 +240,177 @@
           </section>
           <section>
             Errr.... what about <i>flatearthator</i>?
+          </section>
+          <section data-transition="slide-in fade-out">
+            <small>Shift North Pole to Null Island and create the "ice wall"</small><br>
+            <pre>
+              <code data-trim data-noescape>
+                select
+                    *
+
+
+
+
+
+
+
+
+
+
+
+
+
+                from (
+                    select gid, (st_dumppoints(geom)).*
+                    from ne_10m_admin_0_countries
+                ) f
+
+                ;
+              </code>
+            </pre>
+            <div align="right">
+              <small>dump all vertices</small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <small>Shift North Pole to Null Island and create the "ice wall"</small><br>
+            <pre>
+              <code data-trim data-noescape>
+                select
+
+
+
+
+                                    st_buffer(
+                                        st_setsrid(st_point(0,0),4326)::geography,
+                                        st_distance(st_setsrid(st_point(0,90),4326)::geography, geom::geography) / pi()
+                                    )::geometry(polygon, 4326)
+
+
+
+
+
+
+                from (
+                    select gid, (st_dumppoints(geom)).*
+                    from ne_10m_admin_0_countries
+                ) f
+
+                ;
+              </code>
+            </pre>
+            <div align="right">
+              <small><a href="https://postgis.net/docs/ST_Project.html" target="_blank" rel="noopener noreferrer">st_project</a>
+                will not be of use here, let's pretend we're on a flat surface so
+                <a href="https://postgis.net/docs/ST_Buffer.html" target="_blank" rel="noopener noreferrer">st_buffer</a> instead
+              </small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <small>Shift North Pole to Null Island and create the "ice wall"</small><br>
+            <pre>
+              <code data-trim data-noescape>
+                select
+
+
+                            st_rotate(
+                                st_exteriorring(
+                                    st_buffer(
+                                        st_setsrid(st_point(0,0),4326)::geography,
+                                        st_distance(st_setsrid(st_point(0,90),4326)::geography, geom::geography) / pi()
+                                    )::geometry(polygon, 4326)
+                                ),
+                                radians(90)
+                            )
+
+
+
+                from (
+                    select gid, (st_dumppoints(geom)).*
+                    from ne_10m_admin_0_countries
+                ) f
+
+                ;
+              </code>
+            </pre>
+            <div align="right">
+              <small>
+                Take the resulting <a href="https://postgis.net/docs/ST_ExteriorRing.html" target="_blank" rel="noopener noreferrer">st_exteriorring</a>
+                and <a href="https://postgis.net/docs/ST_Rotate.html" target="_blank" rel="noopener noreferrer">st_rotate</a> it 90 degrees
+                counter-clockwise
+              </small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <small>Shift North Pole to Null Island and create the "ice wall"</small><br>
+            <pre>
+              <code data-trim data-noescape>
+                select
+
+                        st_scale(
+                            st_rotate(
+                                st_exteriorring(
+                                    st_buffer(
+                                        st_setsrid(st_point(0,0),4326)::geography,
+                                        st_distance(st_setsrid(st_point(0,90),4326)::geography, geom::geography) / pi()
+                                    )::geometry(polygon, 4326)
+                                ),
+                                radians(90)
+                            ), 1.70, 1.70
+                        )
+
+
+                from (
+                    select gid, (st_dumppoints(geom)).*
+                    from ne_10m_admin_0_countries
+                ) f
+                where st_y(geom) >-85 and st_y(geom) < 85
+                ;
+              </code>
+            </pre>
+            <div align="right">
+              <small>
+                <a href="https://postgis.net/docs/ST_Scale.html" target="_blank" rel="noopener noreferrer">st_scale</a> it a bit bigger,
+                but keep in mind <a href="https://epsg.io/3857" target="_blank" rel="noopener noreferrer">epsg:3857</a> bounds, and
+                <b>don't distort the output</b>, let Mercator do it instead.
+              </small>
+            </div>
+          </section>
+          <section data-transition="fade-in slide-out">
+            <small>Shift North Pole to Null Island and create the "ice wall"</small><br>
+            <pre>
+              <code data-trim data-noescape>
+                select
+                    st_lineinterpolatepoint(
+                        st_scale(
+                            st_rotate(
+                                st_exteriorring(
+                                    st_buffer(
+                                        st_setsrid(st_point(0,0),4326)::geography,
+                                        st_distance(st_setsrid(st_point(0,90),4326)::geography, geom::geography) / pi()
+                                    )::geometry(polygon, 4326)
+                                ),
+                                radians(90)
+                            ), 1.70, 1.70
+                        ),
+                        st_azimuth(st_setsrid(st_point(0, 90),4326)::geography, geom::geography) / (2*pi())
+                    ) as geom, gid, path
+                from (
+                    select gid, (st_dumppoints(geom)).*
+                    from ne_10m_admin_0_countries
+                ) f
+                where st_y(geom) >-85 and st_y(geom) < 85
+                ;
+              </code>
+            </pre>
+            <div align="right">
+              <small>
+                And finally <a href="https://postgis.net/docs/ST_LineInterpolatePoint.html" target="_blank" rel="noopener noreferrer">st_lineinterpolatepoint</a>
+                from the start of the exterior line to the fraction defined by
+                <a href="https://postgis.net/docs/ST_Azimuth.html" target="_blank" rel="noopener noreferrer">st_azimuth</a> between the
+                North Pole and the original vertice.
+              </small>
+            </div>
           </section>
           <section>
             <img style="border:none" src="https://pbs.twimg.com/media/FRz52FFWYAAO9Fg?format=jpg">
@@ -512,7 +738,7 @@
                             )::geometry(point, 4326),
                         3301) as geom, wind_speed_mps, wind_direction_deg, valid_from, valid_to
                     from
-                        w.phenomen
+                        phenomen
                 ) f;
               </code>
             </pre>
@@ -544,7 +770,7 @@
                             )::geometry(point, 4326),
                         3301) as geom, wind_speed_mps, wind_direction_deg, valid_from, valid_to
                     from
-                        w.phenomen
+                        phenomen
                 ) f;
               </code>
             </pre>
@@ -576,7 +802,7 @@
                             )::geometry(point, 4326),
                         3301) as geom, wind_speed_mps, wind_direction_deg, valid_from, valid_to
                     from
-                        w.phenomen
+                        phenomen
                 ) f;
               </code>
             </pre>
