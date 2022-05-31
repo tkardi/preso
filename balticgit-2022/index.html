@@ -71,10 +71,11 @@
             <small>(but got there half an hour early)</small>
           </section>
           <section>
-            Estimate real-time locations based on GTFS*<br>
+            Estimate real-time locations based on GTFS* !<br>
             <small>
-              (<a href="http://www.peatus.ee/gtfs/" target="_blank" rel="noopener noreferrer">
-                data by the</a> Estonian Road Administration)</small>
+              (<a href="https://www.peatus.ee/gtfs/" target="_blank" rel="noopener noreferrer">data</a>
+              by the
+              <a href="https://www.transpordiamet.ee/uhistranspordi-infosusteem" target="_blank" rel="noopener noreferrer">Estonian Road Administration</a>)</small>
             <div align="right">
               <br><br><br><br>
               <small>* - The General Transit Feed Specification<br>
@@ -83,6 +84,7 @@
             </div>
           </section>
           <section>
+            <small>So imagine a bus route like ...</small><br>
             <img style="border:none" src="./static/img/trip.png">
             <div align="right">
               <small>length: ~ 3.5 km</small>
@@ -94,6 +96,7 @@
               <small>
                 Based on current time calculate fraction of time between trip start and end and then
 								<a href="https://postgis.net/docs/ST_LineInterpolatePoint.html" target="_blank" rel="noopener noreferrer">st_lineinterpolatepoint</a>
+                the same amount
               </small>
           </section>
           <section>
@@ -104,15 +107,17 @@
           </section>
           <section>
             Cool!<br>
-            <small>(but with intermediate stops this bus might never be on time)</small>
+            <small>(but with intermediate stops this bus will never be on time)</small>
           </section>
           <section>
+            <small>Consider trip legs of appr. the same distance...</small><br>
             <img style="border:none" src="./static/img/trip-stops.png">
             <div align="right">
               <small>A to B: 1.8 km, B to A: 1.7 km</small>
             </div>
           </section>
           <section>
+            <small>... but very different travel times</small>
             <img style="border:none" src="./static/img/full-trip-stops.gif">
             <div align="right">
               <small>A to B: 30 secs, B to A: 90 secs</small>
@@ -432,19 +437,6 @@
             </small>
           </section>
           <section>
-            Globe<br>
-            <small>(me going full-on estonian)</small>
-          </section>
-          <section>
-            <img style="border:none" src="./static/img/day-29-globe_low_res.gif">
-            <div align="right">
-              <small>
-                <a href="https://tkardi.ee/writeup/30daymapchallenge/29-globe/" target="_blank" rel="noopener noreferrer">SQL bits</a> and
-                <a href="https://tkardi.ee/writeup/img/30daymapchallenge/day-29-globe.gif" target="_blank" rel="noopener noreferrer">hi-fi version</a>
-              </small>
-            </div>
-          </section>
-          <section>
             A peek at weather forecast<br>
             <small>
               (data courtesy of <a href="http://www.ilmateenistus.ee/?lang=en" target="_blank" rel="noopener noreferrer">Estonian Environment Agency</a>)
@@ -462,6 +454,7 @@
             </div>
           </section>
           <section data-transition="slide-in fade-out">
+            <small>grid points to horizontal lines</small><br>
             <pre>
               <code data-trim data-noescape>
                 select
@@ -488,11 +481,14 @@
               </code>
             </pre>
             <div align="right">
-              <small>grid points to horizontal lines:</small><br>
-              <small>create a point shifting its y coordinate to the north by coefficent of temperature</small>
+              <small>
+                create a point (<a href="https://postgis.net/docs/ST_Point.html" target="_blank" rel="noopener noreferrer">st_point</a>)
+                shifting its y coordinate to the north by coefficent of temperature, and <a href="https://postgis.net/docs/ST_Force3D.html" target="_blank" rel="noopener noreferrer">st_force3d</a>.
+              </small>
             </div>
           </section>
           <section data-transition="fade-in fade-out">
+            <small>grid points to horizontal lines</small><br>
             <pre>
               <code data-trim data-noescape>
                 select
@@ -519,11 +515,15 @@
               </code>
             </pre>
             <div align="right">
-              <small>grid points to horizontal lines:</small><br>
-              <small>assign temperature value as z-coordinate to the point</small>
+              <small>
+                <a href="https://postgis.net/docs/ST_Translate.html" target="_blank" rel="noopener noreferrer">st_translate</a> the points
+                z-coordinate to the value of temperature, and <a href="https://postgis.net/docs/ST_SetSrid.html" target="_blank" rel="noopener noreferrer">st_setsrid</a>
+                to <a href="https://epsg.io/3301" target="_blank" rel="noopener noreferrer">epsg:3301</a>.
+              </small>
             </div>
           </section>
           <section data-transition="fade-in fade-out">
+            <small>grid points to horizontal lines</small><br>
             <pre>
               <code data-trim data-noescape>
                 select
@@ -550,11 +550,12 @@
               </code>
             </pre>
             <div align="right">
-              <small>grid points to horizontal lines:</small><br>
-              <small>aggregate all points on the same y coordinate to a line</small>
+              <small>
+                <a href="https://postgis.net/docs/ST_MakeLine.html" target="_blank" rel="noopener noreferrer">st_makeline</a> of all points on the same y</small>
             </div>
           </section>
           <section data-transition="fade-in slide-out">
+            <small>grid points to horizontal lines</small><br>
             <pre>
               <code data-trim data-noescape>
                 select
@@ -581,15 +582,16 @@
               </code>
             </pre>
             <div align="right">
-              <small>grid points to horizontal lines:</small><br>
-              <small>apply Chaikin smoothing on the lines</small>
+              <small>
+                apply <a href="https://postgis.net/docs/ST_ChaikinSmoothing.html" target="_blank" rel="noopener noreferrer">st_chaikinsmoothing</a> on the lines</small>
             </div>
           </section>
           <section>
-            What about assigning different colors to different temperatures?<br>
-            <small>(sure, why not...)</small>
+            What about assigning different colors to different temperatures on the same line?<br>
+            <small>(sure, why not but for that we'll need to ...)</small>
           </section>
           <section data-transition="slide-in fade-out">
+            <small>split lines on every vertex for coloring</small><br>
             <pre>
               <code data-trim data-noescape>
                 with segments as (
@@ -616,11 +618,14 @@
               </code>
             </pre>
             <div align="right">
-              <small>split lines to parts for coloring:</small><br>
-              <small>dump all points</small>
+              <small>
+                dump all points of <a href="https://postgis.net/docs/ST_ChaikinSmoothing.html" target="_blank" rel="noopener noreferrer">st_chaikinsmoothing</a>-ed
+                lines.
+              </small>
             </div>
           </section>
           <section data-transition="fade-in fade-out">
+            <small>split lines on every vertex for coloring</small><br>
             <pre>
               <code data-trim data-noescape>
                 with segments as (
@@ -647,11 +652,14 @@
               </code>
             </pre>
             <div align="right">
-              <small>split lines to parts for coloring:</small><br>
-              <small>aggregate two consequtive points into a line</small>
+              <small>
+                <a href="https://postgis.net/docs/ST_MakeLine.html" target="_blank" rel="noopener noreferrer">st_makeline</a>
+                of two consequtive points on the same y
+              </small>
             </div>
           </section>
           <section data-transition="fade-in slide-out">
+            <small>split lines on every vertex for coloring</small><br>
             <pre>
               <code data-trim data-noescape>
                 with segments as (
@@ -678,8 +686,11 @@
               </code>
             </pre>
             <div align="right">
-              <small>split lines to parts for coloring:</small><br>
-              <small>take the midpoint of the line and its interpolated z-coordinate as temperature value</small>
+              <small>
+                take the midpoint of the segment with
+                <a href="https://postgis.net/docs/ST_LineInterpolatePoint.html" target="_blank" rel="noopener noreferrer">st_lineinterpolatepoint</a>
+                and its (interpolated)
+                <a href="https://postgis.net/docs/ST_Z.html" target="_blank" rel="noopener noreferrer">st_z</a> as temperature value</small>
             </div>
           </section>
           <section>
@@ -687,7 +698,8 @@
             <div align="right">
               <small>
                 <a href="https://tkardi.ee/writeup/30daymapchallenge/02-lines/" target="_blank" rel="noopener noreferrer">SQL bits</a> and
-                <a href="https://tkardi.ee/writeup/img/30daymapchallenge/day-2-lines.gif" target="_blank" rel="noopener noreferrer">hi-fi version</a>
+                <a href="https://tkardi.ee/writeup/img/30daymapchallenge/day-2-lines.gif" target="_blank" rel="noopener noreferrer">hi-fi version</a>,
+                animated with <a href="https://qgis.org/" target="_blank" rel="noopener noreferrer">QGIS</a>
               </small>
             </div>
           </section>
@@ -716,6 +728,7 @@
             <a href="https://trac.osgeo.org/postgis/wiki" target="_blank" rel="noopener noreferrer">PostGIS User's Wiki</a>
           </section>
           <section data-transition="slide-in fade-out">
+            <small>grid points to ellipses of sizes and directions</small><br>
             <pre>
               <code data-trim data-noescape>
                 select
@@ -743,11 +756,16 @@
               </code>
             </pre>
             <div align="right">
-              <small>grid points to ellipses:</small><br>
-              <small>shift grid point off its location by a factor of speed in the wind direction</small>
+              <small>
+                shift grid point off its location by a factor of speed in the wind direction using
+                <a href="https://postgis.net/docs/ST_Project.html" target="_blank" rel="noopener noreferrer">st_project</a> and then
+                <a href="https://postgis.net/docs/ST_Transform.html" target="_blank" rel="noopener noreferrer">st_transform</a> to
+                <a href="https://epsg.io/3301" target="_blank" rel="noopener noreferrer">epsg:3301</a>
+              </small>
             </div>
           </section>
           <section data-transition="fade-in fade-out">
+            <small>grid points to ellipses of sizes and directions</small><br>
             <pre>
               <code data-trim data-noescape>
                 select
@@ -775,11 +793,14 @@
               </code>
             </pre>
             <div align="right">
-              <small>grid points to ellipses:</small><br>
-              <small>create an ellipse in the shifted position with the longer axis a factor of wind speed</small>
+              <small>
+                create a <a href="https://trac.osgeo.org/postgis/wiki/UsersWikiplpgsqlfunctions#ConstructEllipsefromXY" target="_blank" rel="noopener noreferrer">st_ellipse</a>
+                in the previously shifted position with the longer axis as a factor of wind speed
+              </small>
             </div>
           </section>
           <section data-transition="fade-in slide-out">
+            <small>grid points to ellipses of sizes and directions</small><br>
             <pre>
               <code data-trim data-noescape>
                 select
@@ -807,8 +828,10 @@
               </code>
             </pre>
             <div align="right">
-              <small>grid points to ellipses:</small><br>
-              <small>rotate the ellipse in the desired direction</small>
+              <small>
+                <a href="https://postgis.net/docs/ST_Rotate.html" target="_blank" rel="noopener noreferrer">st_rotate</a>
+                the ellipse in the desired direction anchoring on the shifted position.
+              </small>
             </div>
           </section>
           <section>
@@ -816,7 +839,22 @@
             <div align="right">
               <small>
                 <a href="https://tkardi.ee/writeup/30daymapchallenge/03-polygons/" target="_blank" rel="noopener noreferrer">SQL bits</a> and
-                <a href="https://tkardi.ee/writeup/img/30daymapchallenge/day-3-polygons.gif" target="_blank" rel="noopener noreferrer">hi-fi version</a>
+                <a href="https://tkardi.ee/writeup/img/30daymapchallenge/day-3-polygons.gif" target="_blank" rel="noopener noreferrer">hi-fi version</a>,
+                animated with <a href="https://qgis.org/" target="_blank" rel="noopener noreferrer">QGIS</a>
+              </small>
+            </div>
+          </section>
+          <section>
+            Globe<br>
+            <small>(me going full-on estonian)</small>
+          </section>
+          <section>
+            <img style="border:none" src="./static/img/day-29-globe_low_res.gif">
+            <div align="right">
+              <small>
+                <a href="https://tkardi.ee/writeup/30daymapchallenge/29-globe/" target="_blank" rel="noopener noreferrer">SQL bits</a> and
+                <a href="https://tkardi.ee/writeup/img/30daymapchallenge/day-29-globe.gif" target="_blank" rel="noopener noreferrer">hi-fi version</a>,
+                animated with <a href="https://qgis.org/" target="_blank" rel="noopener noreferrer">QGIS</a>
               </small>
             </div>
           </section>
