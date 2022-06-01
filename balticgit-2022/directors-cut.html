@@ -875,13 +875,212 @@
 
         <section>
           <section>
+            <h2>Polygonal expansion</h2>
+            <small>to fill <i>empty</i> space</small>
+          </section>
+          <section>
+            Why?<br>
+            <small class="fragment" data-fragment-index="1">Reduce the number of vertices for coastline administrative units</small>
+            <small class="fragment" data-fragment-index="2">Zipcode areas (follow the next section on the right)</small>
+          </section>
+          <section data-transition="slide-in fade-out">
+            <img style="border:none" src="https://tkardi.ee/writeup/post/2018/05/21/img/exteriorrings.png">
+            <div align="right">
+              <small>
+                <a href="https://postgis.net/docs/ST_DumpRings.html" target="_blank" rel="noopener noreferrer">st_dumprings</a> and
+                <a href="https://postgis.net/docs/ST_ExteriorRing.html" target="_blank" rel="noopener noreferrer">st_exteriorring</a> on polygons to
+                get boundaries as linestrings
+              </small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <img style="border:none" src="https://tkardi.ee/writeup/post/2018/05/21/img/linesmerged.png">
+            <div align="right">
+              <small>
+                <a href="https://postgis.net/docs/ST_Union.html" target="_blank" rel="noopener noreferrer">st_union</a> and
+                <a href="https://postgis.net/docs/ST_Dump.html" target="_blank" rel="noopener noreferrer">st_dump</a> on those linestrings to
+                get single part non-repeating segments.
+              </small>
+            </div>
+          </section>
+          <section data-transition="fade-in slide-out">
+            <img style="border:none" src="https://tkardi.ee/writeup/post/2018/05/21/img/linesmergedfull.png">
+            <div align="right">
+              <small>
+                <a href="https://postgis.net/docs/ST_Collect.html" target="_blank" rel="noopener noreferrer">st_collect</a>,
+                <a href="https://postgis.net/docs/ST_LineMerge.html" target="_blank" rel="noopener noreferrer">st_linemerge</a> and
+                <a href="https://postgis.net/docs/ST_Dump.html" target="_blank" rel="noopener noreferrer">st_dump</a> on those to
+                <i>sow</i> them together.
+              </small>
+            </div>
+          </section>
+          <section>
+            <small>
+              ..or simply count the number of polygons (1 or 2) that the shifted midpoints
+              <a href="https://postgis.net/docs/ST_Intersects.html" target="_blank" rel="noopener noreferrer">st_intersects</a>
+            </small>
+          </section>
+          <section data-transition="fade-in fade-out">
+            Take those linestrings that border only 1 polygon<br>
+            <small class="fragment" data-fragment-index="1">or ...</small><br>
+            <small class="fragment" data-fragment-index="2">left is missing or right is missing</small>
+          </section>
+          <section>
+            <a href="https://postgis.net/docs/ST_LineSubstring.html" target="_blank" rel="noopener noreferrer">st_linesubstring</a><br>
+            <small>to make them a wee shorter at both ends</small>
+          </section>
+          <section>
+            and
+            <a href="https://postgis.net/docs/ST_DumpPoints.html" target="_blank" rel="noopener noreferrer">st_dumppoints</a><br>
+            <small>
+              to extract the vertices ..
+            </small>
+          </section>
+          <section>
+            <small>
+              .. to feed into
+            </small><br>
+            <a href="https://postgis.net/docs/ST_VoronoiPolygons.html" target="_blank" rel="noopener noreferrer">st_voronoipolygons</a>
+          </section>
+          <section>
+            A little longer than a few minutes later...
+          </section>
+          <section data-transition="slide-in fade-out">
+            <img style="border:none" src="https://tkardi.ee/writeup/post/2018/07/21/img/voronoi.png">
+            <div align="right">
+              <small>
+                <a href="https://postgis.net/docs/ST_Intersection.html" target="_blank" rel="noopener noreferrer">st_intersection</a> with an
+                <i>area-of-interest</i> will give only those parts of Voronoi cells we're interested in
+              </small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <img style="border:none" src="https://tkardi.ee/writeup/post/2018/07/21/img/voronoi3.png">
+            <div align="right">
+              <small>
+                A closeup of the Voronoi cells colored by the polygon they belong to
+              </small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <img style="border:none" src="https://tkardi.ee/writeup/post/2018/07/21/img/expanded.png">
+            <div align="right">
+              <small>
+                <a href="https://postgis.net/docs/ST_Union.html" target="_blank" rel="noopener noreferrer">st_union</a> with the <i>original self</i>, and
+                <a href="https://postgis.net/docs/ST_Difference.html" target="_blank" rel="noopener noreferrer">st_difference</a> with <i>all other originals</i>
+              </small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <img style="border:none" src="https://tkardi.ee/writeup/post/2018/07/21/img/expanded3.png">
+            <div align="right">
+              <small>
+                A closeup of the final expansion product
+              </small>
+            </div>
+          </section>
+          <section>
+            <a href="https://tkardi.ee/writeup/post/2018/07/21/subdividing-space/" target="_blank" rel="noopener noreferrer">https://tkardi.ee/writeup/post/2018/07/21/subdividing-space/</a>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>from points to areas</h2>
+            <small>(my little adventure with creating zip code ares)</small>
+          </section>
+          <section data-transition="slide-in fade-out">
+            <image style="border:none" src="./static/img/address_voronoi_by_zip_detail.png"/>
+            <div align="right">
+              <small>Tartu: address point voronois colored by zipcode value</small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-noise.png"/>
+            <div align="right">
+              <small>Tartu: roads, rivers, railways etc. lines</small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-noise-address-by-zip.png"/>
+            <div align="right">
+              <small>Tartu: road, river, railway etc. lines and overlaid addresspoints colored by zip</small>
+            </div>
+          </section>
+					<section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-noisemerged-address-by-zip.png"/>
+            <div align="right">
+              <small>Tartu: road, river, railway etc. lines smashed into polygons (<i>quartiers</i>) and overlaid addresspoints colored by zip</small>
+            </div>
+          </section>
+					<section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-unique-by-zip.png"/>
+            <div align="right">
+              <small>All <i>quartiers</i> with only one zip</small>
+            </div>
+          </section>
+					<section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-unique-by-zip-kataster.png"/>
+            <div align="right">
+              <small>All cadastral parcels with only one zip</small>
+            </div>
+          </section>
+					<section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-unique-by-zip-kataster-2.png"/>
+            <div align="right">
+              <small>.. and merging these two together gives us already a pretty good coverage</small>
+            </div>
+          </section>
+					<section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-unique-by-zip-kataster-trimmed.png"/>
+            <div align="right">
+              <small>Divide the empty space within <i>quartiers</i> that have zips assigned</small>
+            </div>
+          </section>
+					<section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-unique-by-zip-almost-done.png"/>
+            <div align="right">
+              <small>Deal with address-pointless <i>quartiers</i>: longest bordering neighbor wins!</small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <image style="border:none" src="./static/img/tartumaa-detail-almost-done.png"/>
+            <div align="right">
+              <small>Zipcode areas (colored by zipcode value) with address point voronoi boundaries overlayed (red lines) for city of Tartu</small>
+            </div>
+          </section>
+					<section data-transition="fade-in slide-out">
+            <image style="border:none" src="./static/img/unique-by-zip-almost-done.png"/>
+            <div align="right">
+              <small>Zipcode areas for the whole country</small>
+            </div>
+          </section>
+					<section>
+            for a longer discussion on this<br>
+            <small>
+              <a href="https://tkardi.ee/writeup/post/2018/07/22/from-points-to-polygons/"
+                target="_blank" rel="noopener noreferrer">
+                https://tkardi.ee/writeup/post/2018/07/22/from-points-to-polygons/
+              </a>
+            </small>
+          </section>
+					<section>
+            <small>also</small><br>a shoutout to
+            <a href="https://twitter.com/tjukanov"
+              target="_blank" rel="noopener noreferrer">@tjukanov</a>
+              <br><br><br>
+            <a href="https://media.ccc.de/v/bucharest-189-3-6-million-points-to-polygons-lessons-learned-while-generating-voting-districts-with-qgis-postgis-and-openjump-"
+              target="_blank" rel="noopener noreferrer">
+              https://media.ccc.de/v/bucharest-189-3-6-million-points-to-polygons-lessons-learned-while-generating-voting-districts-with-qgis-postgis-and-openjump-
+            </a>
+          </section>
+        </section>
+
+        <section>
+          <section>
             Spatial SQL is fun!<br>
             <small class="fragment" data-fragment-index="1">
               as well useful in real life
-            </small><br>
-            <small class="fragment" data-fragment-index="2">
-              proceed to the
-              <a href="./directors-cut.html#/5"><i>directors cut</i></a>
             </small>
           </section>
           <section>
