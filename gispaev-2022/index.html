@@ -1,0 +1,650 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Lühimat teekonda otsides</title>
+
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/reveal.js@3.9.2/css/reveal.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/reveal.js@3.9.2/css/theme/white.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/reveal.js@3.9.2/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'https://unpkg.com/reveal.js@3.9.2/css/print/pdf.css' : 'https://unpkg.com/reveal.js@3.9.2/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <style>
+    .reveal pre code {
+      font-size: 0.7em;
+      line-height: 1.1;
+    }
+
+    .reveal pre {
+      width: 120%;
+      height: 200%;
+      margin-left: -10%;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h2>Lühimat teekonda otsides</h2>
+            <small style="text-align:left" class="fragment" data-fragment-index="1">avamerel</small>
+            <br><br><br><br>
+            <div align="right">
+              <small>
+                @tkardi<br>
+                Tõnis Kärdi<br>
+                LonLat OÜ / UEC OÜ<br>
+                <a href="mailto:tonis.kardi@gmail.com">tonis.kardi@gmail.com</a>
+              </small>
+            </div>
+        </section>
+
+        <section>
+          <section>
+            <a href="https://tkardi.github.io/preso/gispaev-2022/"
+              target="_blank" rel="noopener noreferrer">
+               https://tkardi.github.io/<br>
+              preso/<br>
+              gispaev-2022/
+            </a>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <div>
+              <h4>Kui meil on kaks punkti ...</h4>
+            </div>
+          </section>
+          <section>
+            <div>
+              <img style="border:none" src="./static/img/kaks-punkti.png">
+            </div>
+          </section>
+          <section>
+            <div>
+              <h4>Siis lühim tee nende vahel on ...</h4>
+            </div>
+          </section>
+          <section>
+            <div>
+              <img style="border:none" src="./static/img/kaks-punkti-lyhim-tee.png">
+            </div>
+          </section>
+          <section>
+            <div>
+              <h4>Küsimused?</h4>
+            </div>
+            <br><br><br><br>
+            <div align="right">
+              <small>
+                @tkardi<br>
+                <a href="mailto:tonis.kardi@gmail.com">tonis.kardi@gmail.com</a><br>
+                <a href="https://tkardi.ee">https://tkardi.ee</a>
+              </small>
+            </div>
+          </section>
+          <section>
+            <div>
+              <img style="border:none;width:75%" src="https://i.giphy.com/media/l0NwPo3VHujpJDI4w/giphy.gif">
+            </div>
+          </section>
+          <section>
+            <div>
+              <h4>sest ...</h4>
+              <small class="fragment" data-fragment-index="1">(alati ei ole)</small>
+            </div>
+          </section>
+          <section>
+            <div>
+              <img style="border:none" src="./static/img/kaks-punkti-lyhim-tee-vesi.png">
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <div>
+              <h4>teekonnaarvutus</h4>
+              <small>(<i>routing</i>)</small>
+            <div>
+          </section>
+          <section>
+            <h4>mööda teid - lihtne</h4>
+            <small>(või noh, suhteliselt lihtne)</small>
+          </section>
+          <section>
+            <div>
+              <img style="border:none" src="./static/img/osm-teed-tartu.png">
+            </div>
+            <div align="right">
+              <small>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://openstreetmap.org/#map=16/58.3757/26.7175">
+                    OpenStreetMap
+                </a> teede väljavõte<br>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="http://download.geofabrik.de/europe/estonia.html">
+                    http://download.geofabrik.de/europe/estonia.html
+                </a>
+              </small>
+            </div>
+          </section>
+          <section>
+            <div>
+              <ul>
+                <li>
+                  OSRM
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://project-osrm.org/">
+                      https://project-osrm.org/
+                  </a>
+                </li>
+                <li>
+                  GraphHopper
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://www.graphhopper.com/">
+                      https://www.graphhopper.com/
+                  </a>
+                </li>
+                <li>
+                  Valhalla
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://valhalla.readthedocs.io/">
+                      https://valhalla.readthedocs.io/
+                  </a>
+                </li>
+                <li>
+                  PgRouting
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://pgrouting.org/">
+                      https://pgrouting.org/
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </section>
+          <section>
+            <div>
+              tipud (nodes) ja <br>kaared (edges)
+            </div>
+            <div>
+              <img style="border:none" src="https://upload.wikimedia.org/wikipedia/commons/5/57/6n-graf.png">
+            </div>
+            <div align="right">
+              <small>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://commons.wikimedia.org/wiki/File:6n-graf.png">
+                    en:User:Chmod007
+                </a>, Public domain, via Wikimedia Commons
+              </small>
+            </div>
+          </section>
+          <section>
+            <div>
+              optimeeri teekond läbi sõlmede rägastiku
+            </div>
+            <small>(teepikkus? kuluv aeg? ilusaimad vaated?)</small>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <div>
+              <h3>teekonnaarvutus avamaastikul?</h3>
+            </div>
+          </section>
+          <section>
+            <div>
+              jah, miks mitte
+            </div>
+            <div>
+              <small>(aga vaja arvutada graaf)</small>
+            </div>
+          </section>
+          <section>
+            <div>
+              Kuidas?
+            </div>
+            <div>
+              <small>päris hea kokkuvõtte teeb nt<br>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://www.tandfonline.com/doi/full/10.1080/10095020.2017.1399675">
+                    Routing through open spaces – A performance comparison of algorithms
+                </a><br>(Hahmann et al 2018)</small>
+            </div>
+          </section>
+          <section>
+            <div>
+              vaatame väikese <i>kiiksuga</i> nähtavusgraafi (?) loomist ja kasutamist
+            </div>
+            <div>
+              <small>
+                (visibility graph)<br>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://en.wikipedia.org/wiki/Visibility_graph">
+                    https://en.wikipedia.org/wiki/Visibility_graph
+                </a>
+              </small>
+            </div>
+          </section>
+          <section>
+            <div>
+              <i>kiiksuga</i> - mis mõttes?
+            </div>
+            <div>
+              <small class="fragment" data-fragment-index="1">kus on algus- ja lõpupunkt?</small>
+              <br class="fragment" data-fragment-index="2">
+              <small class="fragment" data-fragment-index="2">kuidas sügavusandmetega arvestada?</small>
+            </div>
+          </section>
+          <section>
+            <div>
+              <img style="border:none" src="https://grass.osgeo.org/grass82/manuals/v_net_visibility.png">
+            </div>
+            <div align="right">
+              <small>
+                GRASS GIS manual<br>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://grass.osgeo.org/grass82/manuals/v.net.visibility.html">
+                    https://grass.osgeo.org/grass82/manuals/v.net.visibility.html
+                </a>
+              </small>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <div>
+              <h4>quadtree</h4>
+            </div>
+            <div>
+              <small>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://en.wikipedia.org/wiki/Quadtree">
+                    https://en.wikipedia.org/wiki/Quadtree
+                </a>
+              </small>
+            </div>
+          </section>
+          <section>
+            <div>
+              .. on hierarhiline andmestruktuur, kuhu andmed on paigutatud puukujuliselt
+            </div>
+            <div>
+              <small>
+                (ja igal <i>vanemal</i> on neli <i>last</i>)
+              </small>
+            </div>
+          </section>
+          <section>
+            <div>
+              nt TMS (tile map service) stuktuur
+            </div>
+            <div>
+              <small>
+                (kus iga järgneval <i>zoom</i>il jagatakse kahhel neljaks)
+              </small>
+            </div>
+          </section>
+          <section data-transition="slide-in fade-out">
+            <div>
+              <img style="border:none" src="https://tiles.maaamet.ee/tm/tms/1.0.0/kaart@LEST/0/0/0.png">
+            </div>
+            <div align="right">
+              <small>
+                Aluskaardi tailid: Maa-amet @ <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://tiles.maaamet.ee/tm/tms/1.0.0/kaart@LEST">
+                  https://tiles.maaamet.ee/tm/tms/1.0.0/kaart@LEST</a>
+
+              </small>
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <div>
+              <table>
+                <tr>
+                  <td style="border-bottom:none">
+                    <img style="border:none" class="fragment" data-fragment-index="2" src="https://tiles.maaamet.ee/tm/tms/1.0.0/kaart@LEST/1/0/1.png">
+                  </td>
+                  <td style="border-bottom:none">
+                    <img style="border:none" class="fragment" data-fragment-index="3" src="https://tiles.maaamet.ee/tm/tms/1.0.0/kaart@LEST/1/1/1.png">
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <img style="border:none" src="https://tiles.maaamet.ee/tm/tms/1.0.0/kaart@LEST/1/0/0.png">
+                  </td>
+                  <td>
+                    <img style="border:none" class="fragment" data-fragment-index="1" src="https://tiles.maaamet.ee/tm/tms/1.0.0/kaart@LEST/1/1/0.png">
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div align="right">
+              <small>
+                Aluskaardi tailid: Maa-amet @ <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://tiles.maaamet.ee/tm/tms/1.0.0/kaart@LEST">
+                  https://tiles.maaamet.ee/tm/tms/1.0.0/kaart@LEST</a>
+
+              </small>
+            </div>
+          </section>
+          <section>
+            <div>
+              <small>ok. see on kõik tore eksju</small>
+            </div>
+            <div>
+              ... aga mis see siia puutub?
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <div>
+              <h4>indekseerime!</h4>
+            </div>
+            <div>
+              <small>
+                (tühja ruumi, ehk selle ala, kus mitte midagi ei ole)
+              </small>
+            </div>
+          </section>
+          <section>
+            <div>
+              <img style="border:none" src="./static/img/avamaa-quadtree.png">
+            </div>
+          </section>
+          <section>
+            <div>
+              <small>tihendame kastide külgedel olevaid punkte</small>
+            </div>
+            <div>
+              ja ühendame kõik samas kastis olevad võimalikud punktipaarid
+            </div>
+          </section>
+          <section>
+            <div>
+              <img style="border:none" src="./static/img/quadtree-tile.png">
+            </div>
+          </section>
+          <section>
+            <div>
+              <img style="border:none" src="./static/img/quadtree-edges.png">
+            </div>
+          </section>
+          <section>
+            <div>
+              <img style="border:none" src="./static/img/quadtree-edges-2.png">
+            </div>
+          </section>
+          <section>
+            <div>
+              ja põhimõtteliselt ongi meil <i>avamere graaf</i> olemas.
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <div>
+              <h4>teekonnaarvutus avamerel</h4>
+            </div>
+          </section>
+          <section>
+            <div>
+              OSRM:
+            </div>
+            <div>
+              <img style="border:none" src="https://i.stack.imgur.com/eEqWu.gif">
+            </div>
+          </section>
+          <section>
+            <div>
+              Valhalla:
+            </div>
+            <div>
+              <img style="border:none" src="https://64.media.tumblr.com/2f63d3e3079f1e73471fd88a88c78291/tumblr_nqdp3bvUM41tiwa1fo3_500.gif">
+            </div>
+          </section>
+
+          <section>
+            <div>
+              Milles probleem?
+            </div>
+            <div>
+              <pre>
+                <code data-trim data-noescape>
+                  select
+                      count(1)
+                  from
+                      quadtree_edge
+                  ;
+
+                  count
+                  --------
+                  14060962
+                </code>
+              </pre>
+            </div>
+          </section>
+          <section>
+            <div>
+              Kuigi kaari (<i>edges</i>) pole palju, tekib graafi tippudes
+              tohutult palju pöördevõimalusi, mis soovitakse kõik läbi töödelda
+            </div>
+            <div>
+              <small>
+                pluss: topoloogiliselt pole need <i>ruumikujud</i> korrektsed:<br>
+                igas quadtree tailis on vähemalt 1 </i>node</i>'imata lõikumine
+              </small>
+            </div>
+          </section>
+          <section>
+            <div>
+              ok, aga PgRouting?
+            </div>
+            <div>
+              <small>(indeksid! klasterdmine!)</small>
+            </div>
+          </section>
+          <section>
+            <div>
+              <img style="border:none" src="./static/img/kaks-punkti-pgr.png">
+            </div>
+          </section>
+          <section>
+            <div>
+              <small>
+                aga ikkagi ...
+              </small>
+            </div>
+            <div>
+              <img style="border:none" src="./static/img/pgr-query-timing.png">
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <div>
+              <h4>mis oleks kui</h4>
+            </div>
+            <div>
+              <small>teha esialgne päring lihtsalt üle tailide?</small>
+            </div>
+          </section>
+          <section>
+            <div>
+              <small>
+                põhimõtteliselt - leiame quadtree järgi <i>leivapururaja</i>
+              </small>
+            </div>
+            <div>
+              <img style="border:none" src="./static/img/kaks-punkti-pgr-breadcrumbs.png">
+            </div>
+          </section>
+          <section>
+            <div>
+              <small>
+                ja piirame sellega kogu kaarte hulka, mida üldse vaja arvestada
+              </small>
+            </div>
+          </section>
+          <section>
+            <div>
+              <small>
+                tänu millele päringu aeg väheneb oluliselt
+              </small>
+            </div>
+            <div>
+              <img style="border:none" src="./static/img/pgr-query-timing-2.png">
+            </div>
+          </section>
+          <section>
+            <div>
+              <img style="border:none" src="https://i.giphy.com/media/6HOkD1pSCne4E/giphy.gif">
+            </div>
+          </section>
+          <section data-transition="slide-in fade-out">
+            <div>
+              <small>
+                pikemate teekondade arvutamine võtab siiski natuke kauem aega<br>
+                (sekund kuni paar)
+              </small>
+            </div>
+            <div>
+              <img style="border:none" src="./static/img/pgr-pikad-teed.gif">
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <div>
+              <small>
+                ... kui lühikestel teekondadel<br>
+                (millisekundid)
+              </small>
+            </div>
+            <div>
+              <img style="border:none" src="./static/img/pgr-lyhikesed-teed.gif">
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <div>
+              <small>ja teate mis on veel lahedam?</small>
+            </div>
+            <div class="fragment" data-fragment-index="1">
+              me saame ka arvutatud sügavusi arvestada
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <div>
+              <small>
+                nt, teekond Haabneemest Kelvingisse kuni 0m sügavuses
+              </small>
+            </div>
+            <div>
+              <img style="border:none" src="./static/img/sygavus-0.png">
+            </div>
+          </section>
+          <section data-transition="fade-in fade-out">
+            <div>
+              <small>
+                teekond vähemalt 0.5m sügavuses
+              </small>
+            </div>
+            <div>
+              <img style="border:none" src="./static/img/sygavus-05.png">
+            </div>
+          </section>
+          <section data-transition="fade-in slide-out">
+            <div>
+              <small>
+                teekond vähemalt 1.5m sügavuses
+              </small>
+            </div>
+            <div>
+              <img style="border:none" src="./static/img/sygavus-15.png">
+            </div>
+          </section>
+          <section>
+            <div>
+              NB!
+            </div>
+            <div>
+              <small>Sügavusandmete tõlgendamine ja külgelugemine on omaette teema.</small>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <div>
+              <small>
+                @tkardi<br>
+                <a href="mailto:tonis.kardi@gmail.com">tonis.kardi@gmail.com</a><br>
+                <a href="https://tkardi.ee">https://tkardi.ee</a>
+              </small>
+            </div>
+          </section>
+        </section>
+
+
+
+
+      </div>
+    </div>
+
+    <script type="text/javascript"  src="https://unpkg.com/reveal.js@3.9.2/js/reveal.js"></script>
+
+    <script>
+      // More info https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        history: true,
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+          { src: './static/js/notes/notes.js' },
+          { src: 'https://unpkg.com/reveal.js@3.9.2/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
